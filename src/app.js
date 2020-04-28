@@ -5,9 +5,14 @@ const db = require('./db');
 const authy = require('authy')(process.env.TWILIOKEY);
 const random_email = require('random-email');
 const jsonwebtoken = require('jsonwebtoken');
+const cors = require('cors');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(cors({
+    origin: true
+}))
+
 
 app.post('/login', (req, res) => {
     const { phone } = req.body;
