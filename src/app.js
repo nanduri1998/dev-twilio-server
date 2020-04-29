@@ -166,9 +166,9 @@ app.get('/list_store/:storeid', (req, res) => {
 app.post('/sendsms', (req, res) => {
     const { phone, q1, q2 } = req.body;
     const link = 'https://dev-twilio-hackathon.herokuapp.com/callback/'+phone;
-    tinyurl.shorten(link).then((res) => {
+    tinyurl.shorten(link).then((response) => {
         twilio.messages.create({
-            body: 'Hi, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+res,
+            body: 'Hi, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+response,
             from: '+19143038583',
             to: phone
         }).then(() => {
