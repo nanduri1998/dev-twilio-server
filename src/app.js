@@ -108,6 +108,54 @@ app.post('/requestjwt', (req, res) => {
         authyid,
         jwt
     });
+});
+
+app.post('/create-store', (req, res) => {
+    const { authyid, store_name, store_type, opening_time, closing_time } = req.body;
+    const final = {
+        authyid, store_name, store_type, opening_time, closing_time
+    };
+    db.query("INSERT INTO stores SET ?", final, (err, results) => {
+        if(err) console.log(err);
+        else {
+            res.json({
+                status: true,
+                message: "STORE CREATED",
+                store_id: results.insertId
+            });
+        }
+    })
+});
+
+app.post('/set-lat-lng', (req, res) => {
+    const { lat, lng, store_id } = req.body;
+    db.query("UPDATE stores SET lat = ?, lng = ?, WHERE store_id = ?", [lat, lng, store_id], (err, results) => {
+        if(err) console.log(err);
+        else {
+            res.json({
+                status: true,
+                message: "STORE LAT LNG UPDATED",
+            });
+        }
+    })
+});
+
+app.get("/check_store/:authyid", (req, res) => {
+    const { authyid } = req.params;
+    db.query("SELECT COUNT(*) as store FROM stores WHERE authyid = ?", [authyid], (err, results) => {
+        if(err) console.log(err);
+        else{ 
+            if(results[0].store > 0){
+                res.json({
+                    status: true
+                });
+            } else {
+                res.json({
+                    status: false
+                })
+            }
+        }
+    })
 })
 
 function registerNew(phone, email, callback) {
