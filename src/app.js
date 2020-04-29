@@ -167,6 +167,12 @@ app.get("/current_user/:authyid", (req, res) => {
     db.query("SELECT * FROM users WHERE authyid = ?", [req.params.authyid], (err, results) => {
         res.json(results[0]);
     })
+});
+
+app.get("/calldirect/:authyid", (req, res) => {
+    db.query("SELECT phone FROM users WHERE authyid = ?", [req.params.authyid], (err, results) => {
+        res.send("<script>window.location.href = 'tel:+91"+results[0].phone+"'</script>")
+    })
 })
 
 app.post('/sendsms', (req, res) => {
