@@ -6,6 +6,10 @@ const authy = require('authy')(process.env.TWILIOKEY);
 const random_email = require('random-email');
 const jsonwebtoken = require('jsonwebtoken');
 const cors = require('cors');
+const accountSid = process.env.TWILIOSID;
+const authToken = process.env.TWILIOAUTH;
+const twilio = require('twilio')(accountSid, authToken);
+const tinyurl = require('tinyurl');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -138,6 +142,46 @@ app.post('/set-lat-lng', (req, res) => {
             });
         }
     })
+});
+
+app.get('/list_stores', (req, res) => {
+    db.query("SELECT * FROM stores", (err, results) => {
+        res.json(results);
+    })
+});
+
+app.get('/list_store/:storeid', (req, res) => {
+    const { storeid } = req.params;
+    db.query("SELECT * FROM stores WHERE store_id = ?", [storeid], (err, results) => {
+        const authyid = results[0].authyid;
+        db.query("SELECT * FROM users WHERE authyid = ?", [authyid], (err, results1) => {
+            const final = {
+                storeInfo: results, personInfo: results1
+            }
+            res.json(final)
+        })
+    })
+});
+
+app.post('/sendsms', (req, res) => {
+    const { phone, q1, q2 } = req.body;
+    const link = 'https://dev-twilio-hackathon.herokuapp.com/callback/'+phone;
+    tinyurl.shorten(link).then((res) => {
+        twilio.messages.create({
+            body: 'Hi, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+res,
+            from: '+19143038583',
+            to: phone
+        }).then(() => {
+            res.json({
+                status: true
+            })
+        });
+    })
+    
+});
+
+app.get('/callback/:phone', (req, res) => {
+    res.send(window.location.href = 'tel:'+req.params.phone);
 });
 
 app.get("/check_store/:authyid", (req, res) => {
