@@ -163,9 +163,15 @@ app.get('/list_store/:storeid', (req, res) => {
     })
 });
 
+app.get("/current_user/:authyid", (req, res) => {
+    db.query("SELECT * FROM users WHERE authyid = ?", [req.params.authyid], (err, results) => {
+        res.json(results[0]);
+    })
+})
+
 app.post('/sendsms', (req, res) => {
-    const { phone, q1, q2 } = req.body;
-    const link = 'https://dev-twilio-hackathon.herokuapp.com/callback/'+phone;
+    const { phone, q1, q2, user_phone } = req.body;
+    const link = 'https://dev-twilio-hackathon.herokuapp.com/callback/'+user_phone;
     tinyurl.shorten(link).then((response) => {
         twilio.messages.create({
             body: 'Hi, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+response,
