@@ -174,7 +174,7 @@ app.post('/sendsms', (req, res) => {
     const link = 'https://dev-twilio-hackathon.herokuapp.com/callback/'+user_phone;
     tinyurl.shorten(link).then((response) => {
         twilio.messages.create({
-            body: 'Hi, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+response,
+            body: 'Hi from Saath COVID 19. As you have registered as a store, you have one request from a person. '+q1+' Additional Info: '+q2+ ' Please click the link to call back '+response,
             from: '+19143038583',
             to: phone
         }).then(() => {
