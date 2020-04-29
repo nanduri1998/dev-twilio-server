@@ -129,7 +129,7 @@ app.post('/create-store', (req, res) => {
 
 app.post('/set-lat-lng', (req, res) => {
     const { lat, lng, store_id } = req.body;
-    db.query("UPDATE stores SET lat = ?, lng = ?, WHERE store_id = ?", [lat, lng, store_id], (err, results) => {
+    db.query("UPDATE stores SET lat = ?, lng = ? WHERE store_id = ?", [lat, lng, store_id], (err, results) => {
         if(err) console.log(err);
         else {
             res.json({
