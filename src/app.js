@@ -181,7 +181,7 @@ app.post('/sendsms', (req, res) => {
 });
 
 app.get('/callback/:phone', (req, res) => {
-    res.send("window.location.href = 'tel:"+req.params.phone+"'");
+    res.send("<script>window.location.href = 'tel:"+req.params.phone+"'</script>");
 });
 
 app.get("/check_store/:authyid", (req, res) => {
