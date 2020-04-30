@@ -214,9 +214,8 @@ app.get("/check_store/:authyid", (req, res) => {
     })
 });
 
-app.post("/gethotspot", (req, res) => {
-    const { district, state } = req.body;
-    db.query("SELECT * FROM hotspots WHERE district = ? OR state = ?", [district, state], (err, results) => {
+app.get("/gethotspot", (req, res) => {
+    db.query("SELECT * FROM hotspots", [district, state], (err, results) => {
         res.json(results);
     })
 })
