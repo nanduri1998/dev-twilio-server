@@ -212,6 +212,13 @@ app.get("/check_store/:authyid", (req, res) => {
             }
         }
     })
+});
+
+app.post("/gethotspot", (req, res) => {
+    const { district, state } = req.body;
+    db.query("SELECT * FROM hotspots WHERE district = ? OR state = ?", [district, state], (err, results) => {
+        res.json(results);
+    })
 })
 
 function registerNew(phone, email, callback) {
